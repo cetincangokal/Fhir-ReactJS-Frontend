@@ -45,11 +45,13 @@ const Patient = () => {
 
     const columns = [
         { id: 'id', label: 'ID', minWidth: 100 },
+        { id: 'identity', label: 'Identity', minWidth: 150 },
         { id: 'name', label: 'Name', minWidth: 200 },
         { id: 'gender', label: 'Gender', minWidth: 100 },
         { id: 'birthDate', label: 'Birth Date', minWidth: 150 },
         { id: 'phoneNumber', label: 'Phone Number', minWidth: 150 },
-        { id: 'address', label: 'Address' },
+        { id: 'address', label: 'Country/State' },
+        { id: 'nationality', label: 'Nationality', minWidth: 100 },
     ];
     return (
         <>

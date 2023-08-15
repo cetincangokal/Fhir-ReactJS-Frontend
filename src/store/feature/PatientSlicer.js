@@ -6,7 +6,7 @@ import Client from 'fhir-kit-client';
 
 const url = 'https://hapi.fhir.org/baseR5/';
 const client = new Client({ baseUrl: url });
-
+const resourceType = 'Patient';
 
 const initialState = {
   patients: [],
@@ -107,14 +107,16 @@ export const deletePatient = createAsyncThunk('deletePatient', async (patientId)
 export const updatePatient = createAsyncThunk(
   'updatePatient',
   async ({ id, patientData }) => {
+    patientData={resourceType, id,...patientData}
     const response = await client.update({
-      resourceType: 'Patient',
+      resourceType,
       id,
       body: patientData,
     });
-console.log(response);
+
     return response;
   }
+  
   
 ); 
 //#endregion
