@@ -18,7 +18,6 @@ export default function Form({ id, editedPatient, handleClose }) {
         { system: 'phone', value: '', use: 'work', rank: 1 },
     ]);
     const [areaCode, setAreaCode] = useState('');
-    const [adress, setAddress] = useState('');
     const [czNo, setczNo] = useState('');
     var nationalities = require("i18n-nationality");
     const nationalitiesData = nationalities.getAlpha2Codes();
@@ -26,9 +25,11 @@ export default function Form({ id, editedPatient, handleClose }) {
     const countryData = Country.getAllCountries();
     const [stateData, setStateData] = useState();
     const [cityData, setCityData] = useState();
-    const [country, setCountry] = useState(countryData[0]);
-    const [state, setState] = useState();
-    const [city, setCity] = useState();
+    const [country, setCountry] = useState(null);
+    const [state, setState] = useState(null);
+    const [city, setCity] = useState(null);
+    const [birthDateWarning, setBirthDateWarning] = useState(false);
+
 
 
 
@@ -45,15 +46,16 @@ export default function Form({ id, editedPatient, handleClose }) {
             setTelecoms(editedPatient.telecom || [
                 { system: 'phone', value: '', use: 'work', rank: 1 },
             ]);
-            //setAddress(editedPatient.address?.[0]?.line?.[0] || '');
-            setCountry(editedPatient.address?.[0]?.country || '');
-            setState(editedPatient.address?.[0]?.state || '');
-            setCity(editedPatient.address?.[0]?.city || '');
-
+            setCountry(editedPatient.address?.[0]?.country || null);
+            setState(editedPatient.address?.[0]?.state || null);
+            setCity(editedPatient.address?.[0]?.city || null);
+            console.log(editedPatient);
 
         }
     }, [editedPatient]);
     //#region Adress and Nationality
+
+
     useEffect(() => {
         if (country) {
             setStateData(State.getStatesOfCountry(country.isoCode));
@@ -91,6 +93,23 @@ export default function Form({ id, editedPatient, handleClose }) {
     };
 
     //#endregion
+
+    const handleBirthDateChange = (e) => {
+        const selectedDate = e.target.value;
+        setBirthDate(selectedDate);
+    
+        const currentDate = new Date();
+        const selectedDateObj = new Date(selectedDate);
+        const maxAllowedDate = new Date();
+        maxAllowedDate.setFullYear(currentDate.getFullYear() - 100);
+    
+        if (maxAllowedDate > selectedDateObj) {
+            setBirthDateWarning(true);
+        } else {
+            setBirthDateWarning(false);
+        }
+    };
+    
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -372,15 +391,18 @@ export default function Form({ id, editedPatient, handleClose }) {
                             size='small'
                             type="date"
                             value={birthDate}
-                            onChange={(e) => setBirthDate(e.target.value)}
-                            required />
+                            onChange={handleBirthDateChange}
+                            required 
+                            error={birthDateWarning}
+                            helperText={birthDateWarning && "Birth date should be within the last 100 years."}
+                        />
                     </Grid>
 
                     <Grid item xs={4}>
                         <FormControl variant="outlined" size='small' style={{ width: '100%' }}>
                             <InputLabel>Country</InputLabel>
                             <Select
-                                value={country || ''}
+                                value={country || countryData[0] || ''}
                                 onChange={handleCountryChange}
                                 label="Country"
                             >
@@ -396,7 +418,7 @@ export default function Form({ id, editedPatient, handleClose }) {
                         <FormControl variant="outlined" size='small' style={{ width: '100%' }}>
                             <InputLabel>State</InputLabel>
                             <Select
-                                value={state || ''}
+                                value={state || stateData || ''}
                                 onChange={handleStateChange}
                                 label="State"
                             >
@@ -412,7 +434,7 @@ export default function Form({ id, editedPatient, handleClose }) {
                         <FormControl variant="outlined" size='small' style={{ width: '100%' }}>
                             <InputLabel>City</InputLabel>
                             <Select
-                                value={city || ''}
+                                value={city || cityData || ''}
                                 onChange={handleCityChange}
                                 label="City"
                             >
@@ -450,5 +472,5 @@ export default function Form({ id, editedPatient, handleClose }) {
 //multi lang
 //cache timeout
 //status ve randevu eklenecek
-//edit kısmında response body istiyor
 //son eklenen hasta başta görünecek
+//aynı kimlikten başka insan olamaz kimlik regexi koy

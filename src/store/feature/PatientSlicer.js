@@ -65,6 +65,9 @@ export const fetchPatientsData = createAsyncThunk(
             _total: 'accurate',
             ...searchParameters,
           },
+          headers: {
+            'Cache-Control': 'no-cache', // Önbellekleme devre dışı bırakılıyor
+          },
         });
       }
     }
@@ -72,6 +75,9 @@ export const fetchPatientsData = createAsyncThunk(
       response = await client.search({
         resourceType: 'Patient',
         searchParams: { _total: 'accurate' },
+        headers: {
+          'Cache-Control': 'no-cache', // Önbellekleme devre dışı bırakılıyor
+        },
       });
     }
 

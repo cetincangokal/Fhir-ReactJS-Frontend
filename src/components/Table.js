@@ -13,11 +13,13 @@ import TableRow from '@mui/material/TableRow';
 import { Box, Button, Divider, IconButton, InputBase, Stack, Typography } from '@mui/material';
 import { AddCircle } from '@mui/icons-material';
 import { Search as SearchIcon, Delete as DeleteIcon, Edit as EditIcon } from '@mui/icons-material';
+import ArrowRightAltIcon from '@mui/icons-material/ArrowRightAlt';
 import { deletePatient, fetchPatientsData, addPatient } from '../store/feature/PatientSlicer';
 import { useDispatch } from 'react-redux';
 import ConfirmationDialog from './ConfirmationDialogs';
 import Modal from '@mui/material/Modal';
 import Form from './Form';
+import AppointmentForm from './AppointmentForm';
 
 const style = {
     position: 'absolute',
@@ -56,6 +58,7 @@ const PatientList = ({
         setOpen(false);
         resetForm();
     };
+    const [appointmentModalOpen, setAppointmentModalOpen] = useState(false);
     const [editedPatient, setEditedPatient] = useState(null);
     const [deleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false);
     const [deletingPatientId, setDeletingPatientId] = useState(null);
@@ -96,6 +99,10 @@ const PatientList = ({
     const resetForm = async () => {
         setEditedPatient(patients);
     };
+    const handleArrowClick = (patient) => {
+        setEditedPatient(patient); // Set the patient data to the state
+        setAppointmentModalOpen(true); // Open the appointment modal
+    };
 
 
 
@@ -113,10 +120,22 @@ const PatientList = ({
                             id={editedPatient?.id}
                             editedPatient={editedPatient}
                             handleClose={handleClose}
-                            
+
                         />
                     </Box>
                 </Modal>
+                <Modal
+                    open={appointmentModalOpen}
+                    onClose={() => setAppointmentModalOpen(false)}
+                    aria-labelledby="modal-modal-title"
+                    aria-describedby="modal-modal-description"
+
+                >
+                    <Box sx={style}>
+                        <AppointmentForm patient={editedPatient} />
+                    </Box>
+                </Modal>
+
             </div>
 
             <Paper sx={{ width: '100%', overflow: 'hidden', padding: '20px' }}>
@@ -159,13 +178,31 @@ const PatientList = ({
                                         {column.label}
                                     </TableCell>
                                 ))}
-                                <TableCell align='left' style={{ minWidth: "150px" }}>
-                                    
+                                <TableCell align='left' style={{ minWidth: "100px" }}>
+
                                 </TableCell>
                             </TableRow>
                         </TableHead>
-                        {status === 'loading' && <div>Loading...</div>}
-                        {status === 'failed' && <div>Error: {error}</div>}
+                        {status === 'loading' && (
+                            <TableBody>
+                                <TableRow>
+                                    <TableCell colSpan={columns.length + 1} align="center">
+                                        Loading...
+                                    </TableCell>
+                                </TableRow>
+                            </TableBody>
+                        )}
+
+                        {status === 'failed' && (
+                            <TableBody>
+                                <TableRow>
+                                    <TableCell colSpan={columns.length + 1} align="center">
+                                        Error fetching data.
+                                    </TableCell>
+                                </TableRow>
+                            </TableBody>
+                        )}
+
                         {status === 'succeeded' && (
                             <TableBody>
                                 {patients
@@ -189,7 +226,7 @@ const PatientList = ({
                                                 {patient.telecom?.map((phone, index) => (
                                                     <div key={index}>
                                                         <div>{phone.value || '-'}</div>
-                                                        <div>{phone.use}</div>
+                                                        <div>{phone.use || '-'}</div>
                                                     </div>
                                                 ))}
                                             </TableCell>
@@ -199,6 +236,7 @@ const PatientList = ({
                                                     ${patient.address?.[0]?.state || '-'}`}
                                             </TableCell>
                                             <TableCell>{patient.extension?.[0]?.valueCode || '-'}</TableCell>
+                                            <TableCell>{'-'}</TableCell>
                                             <TableCell align='left'>
                                                 <Stack spacing={2} direction="row">
                                                     <IconButton
@@ -211,6 +249,12 @@ const PatientList = ({
                                                         sx={{ color: 'black', fontSize: '20px' }}
                                                     >
                                                         <DeleteIcon />
+                                                    </IconButton>
+                                                    <IconButton
+                                                        onClick={() => handleArrowClick(patient)}
+                                                        sx={{ color: 'black', fontSize: '20px' }}
+                                                    >
+                                                        <ArrowRightAltIcon />
                                                     </IconButton>
                                                 </Stack>
                                             </TableCell>
