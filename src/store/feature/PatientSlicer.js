@@ -66,7 +66,7 @@ export const fetchPatientsData = createAsyncThunk(
             ...searchParameters,
           },
           headers: {
-            'Cache-Control': 'no-cache', // Önbellekleme devre dışı bırakılıyor
+            'Cache-Control': 'no-cache',
           },
         });
       }
@@ -76,7 +76,7 @@ export const fetchPatientsData = createAsyncThunk(
         resourceType: 'Patient',
         searchParams: { _total: 'accurate' },
         headers: {
-          'Cache-Control': 'no-cache', // Önbellekleme devre dışı bırakılıyor
+          'Cache-Control': 'no-cache',
         },
       });
     }
@@ -85,6 +85,7 @@ export const fetchPatientsData = createAsyncThunk(
   }
 );
 //#endregion
+
 
 
 //#region Yeni hasta ekleme
@@ -104,7 +105,7 @@ export const deletePatient = createAsyncThunk('deletePatient', async (patientId)
     resourceType: 'Patient',
     id: patientId,
   });
-
+  console.log(response);
   return patientId;
 });
 //#endregion
@@ -126,6 +127,26 @@ export const updatePatient = createAsyncThunk(
   
 ); 
 //#endregion
+
+export const createAppointment = createAsyncThunk(
+  'createAppointment',
+  async ({ patientId, startDateTime, endDateTime }) => {
+    const appointmentData = {
+      resourceType: 'Appointment',
+      status: 'proposed', // Örneğin, proposed olarak başlayabilirsiniz
+      start: startDateTime.toISOString(), // ISO formatında tarih ve saat
+      end: endDateTime.toISOString(), // ISO formatında tarih ve saat
+      subject: { reference: `Patient/${patientId}` },
+    };
+
+    const response = await client.create({
+      resourceType: 'Appointment',
+      body: appointmentData,
+    });
+
+    return response;
+  }
+);
 
 const PatientSlice = createSlice({
   name: 'patients',

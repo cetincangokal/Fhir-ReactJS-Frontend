@@ -21,6 +21,8 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateOpen } from '../store/feature/AppSlice';
+import { useTranslation } from 'react-i18next';
+
 
 const drawerWidth = 240;
 
@@ -75,6 +77,8 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 
 export default function SideNavBar() {
   const theme = useTheme();
+  const [t, i18n] = useTranslation('global');
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const open = useSelector((state) => state.app.dopen);
@@ -108,7 +112,7 @@ export default function SideNavBar() {
                 >
                     <InboxIcon />     
                 </HomeIcon>
-                <ListItemText primary="Home" sx={{ opacity: open ? 1 : 0 }} />
+                <ListItemText primary={t('patient.navBar.homeNav')} sx={{ opacity: open ? 1 : 0 }} />
               </ListItemButton>
             </ListItem>
             <ListItem disablePadding sx={{ display: 'block' }} onClick={() => {navigate("/patient")}}>
@@ -128,7 +132,7 @@ export default function SideNavBar() {
                 >
                     <InboxIcon />     
                 </PersonIcon>
-                <ListItemText primary="Patients" sx={{ opacity: open ? 1 : 0 }} />
+                <ListItemText primary={t('patient.navBar.patients')} sx={{ opacity: open ? 1 : 0 }} />
               </ListItemButton>
             </ListItem>
             <ListItem disablePadding sx={{ display: 'block' }} onClick={() => {navigate("/settings")}}>
@@ -148,7 +152,7 @@ export default function SideNavBar() {
                 >
                     <InboxIcon />     
                 </SettingsIcon>
-                <ListItemText primary="Settings" sx={{ opacity: open ? 1 : 0 }} />
+                <ListItemText primary={t('patient.navBar.settings')} sx={{ opacity: open ? 1 : 0 }} />
               </ListItemButton>
             </ListItem>
         </List>

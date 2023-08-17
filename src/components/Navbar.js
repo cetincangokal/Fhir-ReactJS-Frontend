@@ -18,12 +18,14 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateOpen } from '../store/feature/AppSlice';
+import LanguageChangerSection from './LanguageChanger';
+
 
 const AppBar = styled(MuiAppBar, {
-  })(({ theme }) => ({
-    zIndex: theme.zIndex.drawer + 1,
+})(({ theme }) => ({
+  zIndex: theme.zIndex.drawer + 1,
 
-  }));
+}));
 
 
 
@@ -93,6 +95,7 @@ export default function Navbar() {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
+
       <MenuItem>
         <IconButton size="large" aria-label="show 4 new mails" color="inherit">
           <Badge badgeContent={4} color="error">
@@ -125,12 +128,13 @@ export default function Navbar() {
         </IconButton>
         <p>Profile</p>
       </MenuItem>
+
     </Menu>
   );
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="fixed" sx={{backgroundColor: "#ffffff", color: "#2f2f2f"}}>
+      <AppBar position="fixed" sx={{ backgroundColor: "#ffffff", color: "#2f2f2f" }}>
         <Toolbar>
           <IconButton
             size="large"
@@ -139,7 +143,7 @@ export default function Navbar() {
             aria-label="open drawer"
             sx={{ mr: 2 }}
             onClick={() => dispatch(updateOpen(!dopen))}
-            >
+          >
             <MenuIcon />
           </IconButton>
           <Typography
@@ -150,9 +154,10 @@ export default function Navbar() {
           >
             HospitApp
           </Typography>
-          
+
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+
             <IconButton size="large" aria-label="show 4 new mails" color="inherit">
               <Badge badgeContent={4} color="error">
                 <MailIcon />
@@ -178,7 +183,13 @@ export default function Navbar() {
             >
               <AccountCircle />
             </IconButton>
+              <MenuItem>
+                <LanguageChangerSection />
+              </MenuItem>
+
+
           </Box>
+
           <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
             <IconButton
               size="large"
@@ -191,7 +202,9 @@ export default function Navbar() {
               <MoreIcon />
             </IconButton>
           </Box>
+
         </Toolbar>
+
       </AppBar>
       {renderMobileMenu}
       {renderMenu}

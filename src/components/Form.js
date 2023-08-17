@@ -5,10 +5,11 @@ import { addPatient, updatePatient } from '../store/feature/PatientSlicer';
 import SendIcon from '@mui/icons-material/Send';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import { City, Country, State } from "country-state-city";
-
+import { useTranslation } from 'react-i18next';
 
 export default function Form({ id, editedPatient, handleClose }) {
     const dispatch = useDispatch();
+    const [t, i18n] = useTranslation('global');
     const [givenName, setGivenName] = useState('');
     const [familyName, setFamilyName] = useState('');
     const [use, setUse] = useState('official');
@@ -17,7 +18,6 @@ export default function Form({ id, editedPatient, handleClose }) {
     const [telecoms, setTelecoms] = useState([
         { system: 'phone', value: '', use: 'work', rank: 1 },
     ]);
-    const [areaCode, setAreaCode] = useState('');
     const [czNo, setczNo] = useState('');
     var nationalities = require("i18n-nationality");
     const nationalitiesData = nationalities.getAlpha2Codes();
@@ -97,19 +97,19 @@ export default function Form({ id, editedPatient, handleClose }) {
     const handleBirthDateChange = (e) => {
         const selectedDate = e.target.value;
         setBirthDate(selectedDate);
-    
+
         const currentDate = new Date();
         const selectedDateObj = new Date(selectedDate);
         const maxAllowedDate = new Date();
         maxAllowedDate.setFullYear(currentDate.getFullYear() - 100);
-    
+
         if (maxAllowedDate > selectedDateObj) {
             setBirthDateWarning(true);
         } else {
             setBirthDateWarning(false);
         }
     };
-    
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -151,12 +151,7 @@ export default function Form({ id, editedPatient, handleClose }) {
             ],
             gender,
             birthDate,
-            extensionArea: [
-                {
-                    url: 'http://hl7.org/fhir/StructureDefinition/contactpoint-area',
-                    valueCode: areaCode,
-                }
-            ],
+
             telecom: newTelecoms,
             address: [
                 {
@@ -177,7 +172,6 @@ export default function Form({ id, editedPatient, handleClose }) {
             setGender('');
             setBirthDate('');
             setTelecoms([{ system: 'phone', value: '', use: 'work', rank: 1 }]);
-            setAreaCode('');
             setCountry('');
             setState('');
             setCity('');
@@ -185,7 +179,7 @@ export default function Form({ id, editedPatient, handleClose }) {
                 dispatch(addPatient(newPatient));
 
             } else {
-                dispatch(updatePatient( {id, patientData: newPatient}));
+                dispatch(updatePatient({ id, patientData: newPatient }));
                 handleClose();
 
             }
@@ -222,7 +216,7 @@ export default function Form({ id, editedPatient, handleClose }) {
         <>
             <Box sx={{ flexGrow: 1 }} />
             <Typography variant='h5' align='left'>
-                {id ? 'Editing Patient' : 'Creating Patient'}
+                {id ? t('patient.addModal.title.update') : t('patient.addModal.title.create')}
             </Typography>
 
             <Box height={10} />
@@ -232,7 +226,7 @@ export default function Form({ id, editedPatient, handleClose }) {
                         <TextField
                             style={{ width: '535px' }}
                             id='outlined-basic'
-                            label='Identity'
+                            label={t('patient.list.columns.identity')}
                             variant='outlined'
                             size='small'
                             type='text'
@@ -243,10 +237,10 @@ export default function Form({ id, editedPatient, handleClose }) {
                     </Grid>
                     <Grid item xs={3}>
                         <FormControl variant="outlined" size='small' style={{ width: '100%' }}>
-                            <InputLabel>Nationality</InputLabel>
+                            <InputLabel>{t('patient.list.columns.nationality')}</InputLabel>
                             <Select
                                 value={nationality}
-                                label="Nationality"
+                                label={t('patient.list.columns.nationality')}
                                 onChange={(e) => setNationality(e.target.value)}
 
                             >
@@ -263,7 +257,7 @@ export default function Form({ id, editedPatient, handleClose }) {
                         <TextField
                             style={{ width: '286px' }}
                             id='outlined-basic'
-                            label="Name"
+                            label={t('patient.list.columns.givenName')}
                             variant='outlined'
                             size='small'
                             type="text"
@@ -275,7 +269,7 @@ export default function Form({ id, editedPatient, handleClose }) {
                         <TextField
                             style={{ width: '286px' }}
                             id='outlined-basic'
-                            label="Last Name"
+                            label={t('patient.list.columns.familyName')}
                             variant='outlined'
                             size='small'
                             type="text"
@@ -287,35 +281,24 @@ export default function Form({ id, editedPatient, handleClose }) {
                     <Grid item xs={2}>
                         <Select value={use} style={{ width: '109px' }}
                             onChange={(e) => setUse(e.target.value)} size="small">
-                            <MenuItem value="official">Official</MenuItem>
-                            <MenuItem value="usual">Usual</MenuItem>
-                            <MenuItem value="nickname">Nickname</MenuItem>
-                            <MenuItem value="anonymous">Anonymous</MenuItem>
-                            <MenuItem value="old">Old</MenuItem>
+                            <MenuItem value="official">{t('patient.list.columns.official')}</MenuItem>
+                            <MenuItem value="usual">{t('patient.list.columns.usual')}</MenuItem>
+                            <MenuItem value="nickname">{t('patient.list.columns.nickname')}</MenuItem>
+                            <MenuItem value="anonymous">{t('patient.list.columns.anonymous')}</MenuItem>
+                            <MenuItem value="old">{t('patient.list.columns.old')}</MenuItem>
                         </Select>
                     </Grid>
 
                     <Grid container spacing={2}>
-                        <Grid item xs={1} style={{ marginTop: '15px', marginLeft: '15px' }}>
-                            <FormControl variant="outlined" size='small'>
-                                <InputLabel>Area Code</InputLabel>
-                                <Select
-                                    label='Area Code'
-                                    style={{ width: '120px' }}
 
-                                >
-
-                                </Select>
-                            </FormControl>
-                        </Grid>
                         {telecoms.map((telecom, index) => (
                             <Grid item xs={9} style={{ marginTop: '15px' }} key={index}>
                                 <div style={{ display: 'flex', alignItems: 'center' }}>
                                     <div style={{ flex: 1 }}>
                                         <TextField
                                             id={`outlined-basic-${index}`}
-                                            label="Phone Number"
-                                            style={{ width: '410px', marginLeft: 85 }}
+                                            label={t('patient.list.columns.phoneNumber')}
+                                            style={{ width: '580px', marginLeft: 15 }}
 
                                             variant='outlined'
                                             type="text"
@@ -334,10 +317,10 @@ export default function Form({ id, editedPatient, handleClose }) {
                                                 handleTelecomChange(index, 'use', e.target.value)
                                             }
                                         >
-                                            <MenuItem value="home">Home</MenuItem>
-                                            <MenuItem value="work">Work</MenuItem>
-                                            <MenuItem value="mobile">Mobile</MenuItem>
-                                            <MenuItem value="old">Old</MenuItem>
+                                            <MenuItem value="home">{t('patient.list.columns.home')}</MenuItem>
+                                            <MenuItem value="work">{t('patient.list.columns.work')}</MenuItem>
+                                            <MenuItem value="mobile">{t('patient.list.columns.mobile')}</MenuItem>
+                                            <MenuItem value="old">{t('patient.list.columns.old')}</MenuItem>
                                         </Select>
                                     </div>
                                 </div>
@@ -357,7 +340,7 @@ export default function Form({ id, editedPatient, handleClose }) {
                             </Grid>
                         ))}
                         <Grid item xs={1}>
-                            <IconButton onClick={handleAddTelecom} style={{ marginTop: '15px', marginLeft: '55px' }}>
+                            <IconButton onClick={handleAddTelecom} style={{ marginTop: '15px', marginLeft: '135px' }}>
                                 <SendIcon style={{ color: '#1565c0' }} />
                             </IconButton>
 
@@ -366,19 +349,19 @@ export default function Form({ id, editedPatient, handleClose }) {
 
                     <Grid item xs={8}>
                         <FormControl size='small'>
-                            <InputLabel id="demo-simple-select-label">Gender</InputLabel>
+                            <InputLabel id="demo-simple-select-label">{t('patient.list.columns.gender')}</InputLabel>
                             <Select
                                 labelId="demo-simple-select-label"
                                 id="demo-simple-select"
                                 value={gender}
-                                label="Gender"
+                                label={t('patient.list.columns.gender')}
                                 style={{ width: '500px' }}
                                 onChange={(e) => setGender(e.target.value)}
                             >
-                                <MenuItem value="unknown">Unknown</MenuItem>
-                                <MenuItem value="male">Male</MenuItem>
-                                <MenuItem value="female">Female</MenuItem>
-                                <MenuItem value="other">Other</MenuItem>
+                                <MenuItem value="unknown">{t('patient.list.columns.Unknown')}</MenuItem>
+                                <MenuItem value="male">{t('patient.list.columns.male')}</MenuItem>
+                                <MenuItem value="female">{t('patient.list.columns.female')}</MenuItem>
+                                <MenuItem value="other">{t('patient.list.columns.other')}</MenuItem>
                             </Select>
                         </FormControl>
                     </Grid>
@@ -392,19 +375,19 @@ export default function Form({ id, editedPatient, handleClose }) {
                             type="date"
                             value={birthDate}
                             onChange={handleBirthDateChange}
-                            required 
+                            required
                             error={birthDateWarning}
-                            helperText={birthDateWarning && "Birth date should be within the last 100 years."}
+                            helperText={birthDateWarning && t('patient.messages.birthdayMsg')}
                         />
                     </Grid>
 
                     <Grid item xs={4}>
                         <FormControl variant="outlined" size='small' style={{ width: '100%' }}>
-                            <InputLabel>Country</InputLabel>
+                            <InputLabel>{t('patient.addModal.formIndex.country')}</InputLabel>
                             <Select
-                                value={country || countryData[0] || ''}
+                                value={country || ''}
                                 onChange={handleCountryChange}
-                                label="Country"
+                                label={t('patient.addModal.formIndex.country')}
                             >
                                 {countryData.map((country) => (
                                     <MenuItem key={country.isoCode} value={country}>
@@ -416,11 +399,11 @@ export default function Form({ id, editedPatient, handleClose }) {
                     </Grid>
                     <Grid item xs={4}>
                         <FormControl variant="outlined" size='small' style={{ width: '100%' }}>
-                            <InputLabel>State</InputLabel>
+                            <InputLabel>{t('patient.addModal.formIndex.state')}</InputLabel>
                             <Select
-                                value={state || stateData || ''}
+                                value={state || ''}
                                 onChange={handleStateChange}
-                                label="State"
+                                label={t('patient.addModal.formIndex.state')}
                             >
                                 {stateData && stateData.map((state) => (
                                     <MenuItem key={state.isoCode} value={state}>
@@ -432,11 +415,11 @@ export default function Form({ id, editedPatient, handleClose }) {
                     </Grid>
                     <Grid item xs={4}>
                         <FormControl variant="outlined" size='small' style={{ width: '100%' }}>
-                            <InputLabel>City</InputLabel>
+                            <InputLabel>{t('patient.addModal.formIndex.city')}</InputLabel>
                             <Select
-                                value={city || cityData || ''}
+                                value={city || ''}
                                 onChange={handleCityChange}
-                                label="City"
+                                label={t('patient.addModal.formIndex.city')}
                             >
                                 {cityData && cityData.map((city) => (
                                     <MenuItem key={city.name} value={city}>
@@ -448,16 +431,16 @@ export default function Form({ id, editedPatient, handleClose }) {
                     </Grid>
                     <Grid item xs={10}>
                         <Typography variant='h5' align='right'>
-                        <Button onClick={handleClose} style={{backgroundColor:"#F7FAF7", color:'grey'}} variant="contained">
-                            Cancel
-                        </Button>
+                            <Button onClick={handleClose} style={{ backgroundColor: "#F7FAF7", color: 'grey' }} variant="contained">
+                                {t('patient.addModal.button.cancel')}
+                            </Button>
                         </Typography>
                     </Grid>
                     <Grid item xs={1}>
                         <Typography variant='h5' align='right'>
                             <Button
                                 type='submit' variant="contained">
-                                {id ? 'Update' : 'Save'}
+                                {id ? t('patient.addModal.button.updtButton') : t('patient.addModal.button.saveButton')}
 
                             </Button>
                         </Typography>
@@ -470,7 +453,5 @@ export default function Form({ id, editedPatient, handleClose }) {
     )
 }
 //multi lang
-//cache timeout
 //status ve randevu eklenecek
-//son eklenen hasta başta görünecek
 //aynı kimlikten başka insan olamaz kimlik regexi koy

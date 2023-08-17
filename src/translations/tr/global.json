@@ -1,0 +1,67 @@
+{
+  "patient": {
+    "list": {
+      "title": "Hasta Listesi",
+      "columns": {
+        "identity": "TC kimlik no",
+        "id": "Kaynak no",
+        "givenName": "İsim",
+        "familyName": "Soyisim",
+        "name": "Ad Soyad",
+        "gender": "Cinsiyet",
+        "birthDate": "Doğum Günü",
+        "phoneNumber": "Telefon No",
+        "address": "Ülke/Şehir",
+        "nationality": "Ulus",
+        "status": "Durum",
+        "buttons": "",
+        "Unknown": "Bilinmiyor",
+        "male": "Erkek",
+        "female": "Kadın",
+        "other": "Diğer",
+        "official": "Resmi",
+        "usual": "Günlük",
+        "nickname": "Takma Ad",
+        "anonymous": "Anonim",
+        "old": "Eski",
+        "home": "Ev",
+        "work": "İş",
+        "mobile": "Cep",
+        "search": "İsime göre ara..."
+      }
+    },
+    "addModal": {
+      "title": {
+        "update": "Hasta Güncelle",
+        "create": "Hasta Ekle"
+      },
+      "formIndex": {
+        "country": "Ülke",
+        "state": "Eyalet",
+        "city": "Şehir"
+      },
+      "button": {
+        "updtButton": "Güncelle",
+        "saveButton": "Kaydet",
+        "cancel": "Kapat",
+        "confirm": "Onayla",
+        "addBtn": "Ekle"
+      }
+    },
+    "navBar": {
+      "homeNav": "Ana Sayfa",
+      "patients": "Hastalar",
+      "settings": "Ayarlar"
+    },
+    "messages": {
+      "deleteMsg": "Bu hastayı silmek istediğinize emin misiniz?",
+      "deleteTitle": "Silmeyi Onayla",
+      "birthdayMsg": "Doğum tarihi son 100 sene içerisinde olmalıdır!"
+    },
+    "appointmentForm": {
+      "title": "Randevu Formu",
+      "ApoDay": "Randevu Günü",
+      "ApoTime": "Randevu Saati"
+    }
+  }
+}

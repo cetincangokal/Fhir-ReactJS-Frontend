@@ -20,6 +20,8 @@ import ConfirmationDialog from './ConfirmationDialogs';
 import Modal from '@mui/material/Modal';
 import Form from './Form';
 import AppointmentForm from './AppointmentForm';
+import { useTranslation } from 'react-i18next';
+
 
 const style = {
     position: 'absolute',
@@ -51,6 +53,7 @@ const PatientList = ({
 }) => {
 
     const dispatch = useDispatch();
+    const [t, i18n] = useTranslation('global');
     const [searchTerm, setSearchTerm] = useState('');
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
@@ -132,7 +135,7 @@ const PatientList = ({
 
                 >
                     <Box sx={style}>
-                        <AppointmentForm patient={editedPatient} />
+                        <AppointmentForm onClose={handleClose} patient={editedPatient} />
                     </Box>
                 </Modal>
 
@@ -145,7 +148,7 @@ const PatientList = ({
                     component="div"
                     sx={{ padding: "20px" }}
                 >
-                    Patient List
+                    {t('patient.list.title')}
                 </Typography>
                 <Divider />
                 <Box height={10} />
@@ -153,7 +156,7 @@ const PatientList = ({
                     <InputBase
                         style={{ color: 'black', marginLeft: '20px', borderInlineColor: '#B1AFAF' }}
 
-                        placeholder="Search by name..."
+                        placeholder={t('patient.list.columns.search')}
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                     />
@@ -162,7 +165,7 @@ const PatientList = ({
                     </IconButton>
                     <Typography variant='h6' component={'div'} sx={{ flexGrow: 1 }}></Typography>
 
-                    <Button onClick={handleOpen} color='grey' variant="contained" endIcon={<AddCircle />}>Add</Button>
+                    <Button onClick={handleOpen} color='grey' variant="contained" endIcon={<AddCircle />}>{t('patient.addModal.button.addBtn')}</Button>
                 </Stack>
                 <Box height={10} />
                 <TableContainer sx={{ maxHeight: 440 }}>
@@ -175,7 +178,7 @@ const PatientList = ({
                                         align={column.align}
                                         style={{ minWidth: column.minWidth }}
                                     >
-                                        {column.label}
+                                        {t('patient.list.columns.' + column.id)}
                                     </TableCell>
                                 ))}
                                 <TableCell align='left' style={{ minWidth: "100px" }}>
@@ -284,8 +287,8 @@ const PatientList = ({
                     open={deleteConfirmationOpen}
                     onClose={handleCloseDeleteConfirmation}
                     onConfirm={handleConfirmDelete}
-                    title="Confirm Delete"
-                    message="Are you sure you want to delete this patient?"
+                    title={t('patient.messages.deleteTitle')}
+                    message={t('patient.messages.deleteMsg')}
                 />
             </Paper>
 

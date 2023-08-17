@@ -1,0 +1,69 @@
+{
+    "patient": {
+      "list": {
+        "title": "Patient List",
+        "columns": {
+          "identity": "Passport Number",
+          "id": "Resource id",
+          "familyName": "Surname",
+          "givenName": "Name",
+          "name": "Full Name",
+          "gender": "Gender",
+          "birthDate": "Birthdate",
+          "phoneNumber": "Phone number",
+          "address": "Country/State",
+          "nationality": "Nationality",
+          "status": "Status",
+          "buttons": "",
+          "Unknown": "Unknown",
+          "male": "Male",
+          "female": "Female",
+          "other": "Other",
+          "official": "Official",
+          "usual": "Usual",
+          "nickname": "Nickname",
+          "anonymous": "Anonymous",
+          "old": "Old",
+          "home": "Home",
+          "work": "Work",
+          "mobile": "Mobile",
+          "search": "Search by name..."
+        }
+      },
+      
+      "addModal": {
+        "title": {
+            "update": "Editing Patient",
+            "create": "Creating Patient"
+        },
+        "formIndex": {
+          "country": "Country",
+          "state": "State",
+          "city": "City"
+        },
+        "button": {
+          "updtButton": "Update",
+          "saveButton": "Save",
+          "cancel": "Cancel",
+          "confirm": "Confirm",
+          "addBtn": "Add"
+        }
+        
+      },
+      "navBar": {
+        "homeNav": "Home",
+        "patients": "Patients",
+        "settings": "Settings"
+      },
+      "messages": {
+        "deleteMsg": "Are you sure you want to delete this patient?",
+        "deleteTitle": "Confirm Delete",
+        "birthdayMsg": "Birth date should be within the last 100 years!"
+      },
+      "appointmentForm": {
+        "title": "Appointment Form",
+        "ApoDay": "Appointment Date",
+        "ApoTime": "Appointment Time"
+      }
+    }
+  }

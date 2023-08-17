@@ -5,12 +5,18 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
+import { useDispatch } from 'react-redux';
+import { createAppointment } from '../store/feature/PatientSlicer'; // Import edilen kısmı projenize uygun şekilde güncelleyin
+import { useTranslation } from 'react-i18next';
 
 
 const AppointmentForm = ({ onClose, patient }) => {
     const [givenName, setGivenName] = useState('');
     const [familyName, setFamilyName] = useState('');
     const [czNo, setCzNo] = useState('');
+    const [selectedDate, setSelectedDate] = useState(null); // Eklenen satır
+    const [t, i18n] = useTranslation('global');
+
 
     useEffect(() => {
         if (patient) {
@@ -20,27 +26,37 @@ const AppointmentForm = ({ onClose, patient }) => {
         }
     }, [patient]);
 
-    const handleSave = () => {
+    const dispatch = useDispatch();
+
+    const handleSave = async () => {
         const data = {
             givenName,
             familyName,
             czNo,
+            startDateTime: selectedDate, // Eklendi
+            endDateTime: selectedDate, // Eklendi
         };
 
-        onClose(data);
+        try {
+            await dispatch(createAppointment(data)); // Randevu oluşturma thunk'ı çağrıldı
+            onClose(data);
+        } catch (error) {
+            console.error('Error creating appointment:', error);
+            // Hata durumunu ele almak için gerekli adımları burada yapabilirsiniz
+        }
     };
 
     return (
         <div>
             <Box sx={{ flexGrow: 1 }}>
                 <Typography variant='h5' align='left'>
-                    Appointment Form
+                    {t('patient.appointmentForm.title')}
                 </Typography>
                 <Box height={10} />
                 <Grid container spacing={2}>
                     <Grid item xs={4}>
                         <TextField
-                            label="Name"
+                            label={t('patient.list.columns.givenName')}
                             value={givenName}
                             size={'small'}
 
@@ -55,7 +71,7 @@ const AppointmentForm = ({ onClose, patient }) => {
                     <Grid item xs={4}>
 
                         <TextField
-                            label="Surname"
+                            label={t('patient.list.columns.familyName')}
                             value={familyName}
                             size={'small'}
 
@@ -70,7 +86,7 @@ const AppointmentForm = ({ onClose, patient }) => {
                     <Grid item xs={4}>
 
                         <TextField
-                            label="Identity"
+                            label={t('patient.list.columns.identity')}
                             value={czNo}
                             size={'small'}
                             onChange={(e) => setCzNo(e.target.value)}
@@ -83,16 +99,16 @@ const AppointmentForm = ({ onClose, patient }) => {
                     </Grid>
                     <Grid item xs={6}>
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
-                            <DemoContainer  components={['DatePicker']}>
-                                <DatePicker label="Appointment Day"
+                            <DemoContainer components={['DatePicker']}>
+                                <DatePicker label={t('patient.appointmentForm.ApoDay')}
                                     slotProps={{ textField: { size: 'small' } }} />
                             </DemoContainer>
                         </LocalizationProvider>
                     </Grid>
                     <Grid item xs={6}>
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
-                            <DemoContainer  components={['TimePicker']}>
-                                <TimePicker label="Appointment Time"
+                            <DemoContainer components={['TimePicker']}>
+                                <TimePicker label={t('patient.appointmentForm.ApoTime')}
                                     slotProps={{ textField: { size: 'small' } }}
                                 />
                             </DemoContainer>
@@ -101,10 +117,10 @@ const AppointmentForm = ({ onClose, patient }) => {
                     <Grid item xs={12}>
                         <Typography align='right' variant='h5'>
                             <Button onClick={handleSave} variant="contained" color="primary">
-                                Save
+                            {t('patient.addModal.button.saveButton')}
                             </Button>
                             <Button style={{ marginLeft: 4 }} variant="contained" color="secondary">
-                                Cancel
+                            {t('patient.addModal.button.cancel')}
                             </Button>
                         </Typography>
                     </Grid>
