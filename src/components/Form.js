@@ -177,6 +177,7 @@ export default function Form({ id, editedPatient, handleClose }) {
             setCity('');
             if (!id) {
                 dispatch(addPatient(newPatient));
+                handleClose();
 
             } else {
                 dispatch(updatePatient({ id, patientData: newPatient }));
@@ -452,6 +453,7 @@ export default function Form({ id, editedPatient, handleClose }) {
         </>
     )
 }
-//multi lang
 //status ve randevu eklenecek
 //aynı kimlikten başka insan olamaz kimlik regexi koy
+//gender codeSystem
+//country kısmı elden geçecek

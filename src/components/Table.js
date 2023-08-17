@@ -94,6 +94,7 @@ const PatientList = ({
     const handleCreatePatient = (patientData) => {
         dispatch(addPatient(patientData));
         setOpen(false);
+
     };
     const handleEditClick = (patient) => {
         setEditedPatient(patient);
@@ -123,7 +124,6 @@ const PatientList = ({
                             id={editedPatient?.id}
                             editedPatient={editedPatient}
                             handleClose={handleClose}
-
                         />
                     </Box>
                 </Modal>
