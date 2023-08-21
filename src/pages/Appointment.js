@@ -2,17 +2,17 @@ import React, { useEffect } from 'react'
 import SideNavBar from '../components/SideNavbar'
 import Box from '@mui/material/Box';
 import Navbar from '../components/Navbar';
-import PatientList from '../components/Table';
+import AppointmentList from '../components/AppointmentList';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchPatientsData, setPage, setPatientsPage, fetchGenders } from '../store/feature/PatientSlicer';
+import { fetchAppointmentData, setPage, setAppointmentsPage } from '../store/feature/AppointmentSlice';
 
 
 
-const Patient = () => {
+const Appointment = () => {
     const dispatch = useDispatch();
-    const { patients, response, nextUrl, prevUrl, totalPatient, page, patientsPage, status, error } = useSelector(state => state.patients);
+    const { appointments, response, nextUrl, prevUrl, totalAppointment, page, appointmentsPage, status, error } = useSelector(state => state.appointments);
     useEffect(() => {
-        dispatch(fetchPatientsData(''));
+        dispatch(fetchAppointmentData(''));
     }, [dispatch]);
 
 
@@ -21,12 +21,12 @@ const Patient = () => {
     //#region Sayfada gösterilecek data
     const changePage = (event, newPage) => {
         if (newPage > page && nextUrl) {
-            dispatch(fetchPatientsData({ type: 'next', bundle: response }))
+            dispatch(fetchAppointmentData({ type: 'next', bundle: response }))
                 .catch((error) => {
                     console.error("Error fetching next page data:", error);
                 });
         } else if (newPage < page && prevUrl) {
-            dispatch(fetchPatientsData({ type: 'prev', bundle: response }))
+            dispatch(fetchAppointmentData({ type: 'prev', bundle: response }))
                 .catch((error) => {
                     console.error("Error fetching previous page data:", error);
                 });
@@ -39,8 +39,8 @@ const Patient = () => {
 
 
 
-    const ChangePatients = (event) => {
-        dispatch(setPatientsPage(+event.target.value));
+    const ChangeAppointments = (event) => {
+        dispatch(setAppointmentsPage(+event.target.value));
         dispatch(setPage(0));
     };
 
@@ -48,13 +48,9 @@ const Patient = () => {
 
     const columns = [
         { id: 'id', label: 'ID', minWidth: 100 },
-        { id: 'identity', label: 'Identity No', minWidth: 100 },
-        { id: 'name', label: 'Name Surname', minWidth: 150 },
-        { id: 'gender', label: 'Gender', minWidth: 100 },
-        { id: 'birthDate', label: 'Birth Date', minWidth: 100 },
-        { id: 'phoneNumber', label: 'Phone Number', minWidth: 100 },
-        { id: 'address', label: 'Country/State' },
-        { id: 'nationality', label: 'Nationality', minWidth: 100 },
+        { id: 'date', label: 'Date', minWidth: 100 },
+        { id: 'patientName', label: 'Patient Name', minWidth: 150 },
+        { id: 'expert', label: 'Expert', minWidth: 100 },
         { id: 'status', label: 'Status', minWidth: 100 },
     ];
     return (
@@ -64,18 +60,18 @@ const Patient = () => {
             <Box sx={{ display: 'flex' }}>
                 <SideNavBar />
                 <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-                    <PatientList
-                        patients={patients}
+                    <AppointmentList
+                        appointments={appointments}
                         columns={columns}
-                        totalPatient={totalPatient}
+                        totalAppointment={totalAppointment}
                         page={page}
-                        patientsPage={patientsPage}
+                        appointmentsPage={appointmentsPage}
                         status={status}
                         error={error}
                         nextUrl={nextUrl}
                         prevUrl={prevUrl}
                         changePage={changePage}
-                        ChangePatients={ChangePatients}
+                        ChangeAppointments={ChangeAppointments}
 
                     />
                 </Box>
@@ -86,4 +82,4 @@ const Patient = () => {
     )
 }
 
-export default Patient;
+export default Appointment;

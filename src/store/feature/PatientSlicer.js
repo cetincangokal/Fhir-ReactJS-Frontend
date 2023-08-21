@@ -11,6 +11,7 @@ const resourceType = 'Patient';
 const initialState = {
   patients: [],
   response: {},
+  genders: {},
   nextUrl: null,
   prevUrl: null,
   totalPatient: 0,
@@ -86,7 +87,15 @@ export const fetchPatientsData = createAsyncThunk(
 );
 //#endregion
 
-
+export const fetchGenders = createAsyncThunk('patients/fetchGenders', async () => {
+  const finalRequestBody = {
+    resourceType: 'CodeSystem',
+    id: 'administrative-gender'
+  };
+  const response = await client.read(finalRequestBody);
+  console.log(response);
+  return response;
+});
 
 //#region Yeni hasta ekleme
 export const addPatient = createAsyncThunk('addPatient', async (patientData) => {
@@ -133,9 +142,9 @@ export const createAppointment = createAsyncThunk(
   async ({ patientId, startDateTime, endDateTime }) => {
     const appointmentData = {
       resourceType: 'Appointment',
-      status: 'proposed', // Örneğin, proposed olarak başlayabilirsiniz
-      start: startDateTime.toISOString(), // ISO formatında tarih ve saat
-      end: endDateTime.toISOString(), // ISO formatında tarih ve saat
+      status: 'proposed',
+      start: startDateTime.toISOString(),
+      end: endDateTime.toISOString(),
       subject: { reference: `Patient/${patientId}` },
     };
 
@@ -239,6 +248,16 @@ const PatientSlice = createSlice({
       state.error = action.error.message;
       state.status = 'failed';
     });
+    builder.addCase(fetchGenders.pending, (state) => {
+      state.loading = true;
+    })
+    builder.addCase(fetchGenders.fulfilled, (state, action) => {
+      state.loading = false;
+      state.genders = action.payload;
+    })
+    builder.addCase(fetchGenders.rejected, (state) => {
+      state.loading = false;
+    })
 
   },
 });

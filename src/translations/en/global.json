@@ -10,7 +10,8 @@
           "name": "Full Name",
           "gender": "Gender",
           "birthDate": "Birthdate",
-          "phoneNumber": "Phone number",
+          "phoneNumber": "Phone Number",
+          "areaCode": "Area Code",
           "address": "Country/State",
           "nationality": "Nationality",
           "status": "Status",
@@ -53,17 +54,17 @@
       "navBar": {
         "homeNav": "Home",
         "patients": "Patients",
-        "settings": "Settings"
+        "appointment": "Appointment List"
       },
       "messages": {
         "deleteMsg": "Are you sure you want to delete this patient?",
         "deleteTitle": "Confirm Delete",
         "birthdayMsg": "Birth date should be within the last 100 years!"
       },
-      "appointmentForm": {
-        "title": "Appointment Form",
-        "ApoDay": "Appointment Date",
-        "ApoTime": "Appointment Time"
+      "appointment": {
+        "title": "Appointment List"
+        
+
       }
     }
   }

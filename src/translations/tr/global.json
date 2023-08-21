@@ -11,6 +11,7 @@
         "gender": "Cinsiyet",
         "birthDate": "Doğum Günü",
         "phoneNumber": "Telefon No",
+        "areaCode": "Alan Kodu",
         "address": "Ülke/Şehir",
         "nationality": "Ulus",
         "status": "Durum",
@@ -37,8 +38,8 @@
       },
       "formIndex": {
         "country": "Ülke",
-        "state": "Eyalet",
-        "city": "Şehir"
+        "state": "Şehir",
+        "city": "İlçe"
       },
       "button": {
         "updtButton": "Güncelle",
@@ -51,7 +52,7 @@
     "navBar": {
       "homeNav": "Ana Sayfa",
       "patients": "Hastalar",
-      "settings": "Ayarlar"
+      "appointment": "Randevu Listesi"
     },
     "messages": {
       "deleteMsg": "Bu hastayı silmek istediğinize emin misiniz?",

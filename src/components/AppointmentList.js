@@ -13,7 +13,7 @@ import TableRow from '@mui/material/TableRow';
 import { Box, Button, Divider, IconButton, InputBase, Stack, Typography } from '@mui/material';
 import { AddCircle } from '@mui/icons-material';
 import { Search as SearchIcon, Delete as DeleteIcon, Edit as EditIcon } from '@mui/icons-material';
-import { deletePatient, fetchPatientsData, addPatient } from '../store/feature/PatientSlicer';
+import { deleteAppointment, fetchAppointmentData, addAppointment } from '../store/feature/AppointmentSlice';
 import { useDispatch } from 'react-redux';
 import ConfirmationDialog from './ConfirmationDialogs';
 import Modal from '@mui/material/Modal';
@@ -38,17 +38,17 @@ const style = {
 
 
 
-const PatientList = ({
-    patients,
+const AppointmentList = ({
+    appointments,
     columns,
     page,
-    patientsPage,
+    appointmentsPage,
     status,
-    totalPatient,
+    totalAppointment,
     nextUrl,
     prevUrl,
     changePage,
-    ChangePatients,
+    ChangeAppointment,
 }) => {
 
     const dispatch = useDispatch();
@@ -60,90 +60,53 @@ const PatientList = ({
         setOpen(false);
         resetForm();
     };
-    const [editedPatient, setEditedPatient] = useState(null);
+    const [editedAppointment, setEditedAppointment] = useState(null);
     const [deleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false);
-    const [deletingPatientId, setDeletingPatientId] = useState(null);
+    const [deletingAppointmentId, setDeletingAppointmentId] = useState(null);
 
 
-    const handleOpenDeleteConfirmation = (patientId) => {
+    const handleOpenDeleteConfirmation = (appointmentId) => {
         setDeleteConfirmationOpen(true);
-        setDeletingPatientId(patientId);
+        setDeletingAppointmentId(appointmentId);
     };
 
     const handleCloseDeleteConfirmation = () => {
         setDeleteConfirmationOpen(false);
-        setDeletingPatientId(null);
+        setDeletingAppointmentId(null);
     };
 
     const handleConfirmDelete = () => {
-        if (deletingPatientId) {
-            handleDeletePatient(deletingPatientId);
+        if (deletingAppointmentId) {
+            handleDeleteAppointment(deletingAppointmentId);
             handleCloseDeleteConfirmation();
         }
     };
-    const handleDeletePatient = (patientId) => {
-        dispatch(deletePatient(patientId));
+    const handleDeleteAppointment = (appointmentId) => {
+        dispatch(deleteAppointment(appointmentId));
     };
 
-    const handleSearch = () => {
-        dispatch(fetchPatientsData({ type: 'search', searchTerm }));
-    };
 
-    const handleCreatePatient = (patientData) => {
-        dispatch(addPatient(patientData));
-        setOpen(false);
 
-    };
-    const handleEditClick = (patient) => {
-        setEditedPatient(patient);
-        setOpen(true);
-    };
+    // const handleCreatePatient = (Data) => {
+    //     dispatch(addAppointment(patientData));
+    //     setOpen(false);
+
+    // };
+    // const handleEditClick = (patient) => {
+    //     setEditedPatient(patient);
+    //     setOpen(true);
+    // };
     const resetForm = async () => {
-        setEditedPatient(patients);
+        setEditedAppointment(appointments);
     };
 
 
-    let getCountryName = (countryCode) => {
-        const country = Country.getCountryByCode(countryCode);
-        return country ? country.name : '-';
-    };
 
-    // Eyalet kodunu kullanarak eyalet adını al
-    const getStateName = (stateCode, countryCode) => {
-        const state = State.getStateByCodeAndCountry(stateCode, countryCode);
-        return state ? state.name : '-';
-    };
-
-    // const getGenderValueBasedOnLanguage = (gender) => {
-    //     const genderConceptObject = genders?.concept?.filter((element) => element.code === gender)[0] || undefined;
-    //     return (
-    //       genderConceptObject?.designation?.filter((element1) => element1.language === i18n.language)[0]?.value ||
-    //       genderConceptObject?.display ||
-    //       undefined
-    //     );
-    //   };
 
 
     return (
         <div>
-            <div>
-                <Modal
-                    open={open}
-                    aria-labelledby="modal-modal-title"
-                    aria-describedby="modal-modal-description"
-                >
-                    <Box sx={style}>
-                        <Form
-                            handleCreatePatient={handleCreatePatient}
-                            id={editedPatient?.id}
-                            editedPatient={editedPatient}
-                            handleClose={handleClose}
-                        />
-                    </Box>
-                </Modal>
 
-
-            </div>
 
             <Paper sx={{ width: '100%', overflow: 'hidden', padding: '20px' }}>
                 <Typography
@@ -155,22 +118,7 @@ const PatientList = ({
                     {t('patient.list.title')}
                 </Typography>
                 <Divider />
-                <Box height={10} />
-                <Stack direction={"row"} spacing={2}>
-                    <InputBase
-                        style={{ color: 'black', marginLeft: '20px', borderInlineColor: '#B1AFAF' }}
 
-                        placeholder={t('patient.list.columns.search')}
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                    />
-                    <IconButton onClick={handleSearch} sx={{ color: 'black' }}>
-                        <SearchIcon />
-                    </IconButton>
-                    <Typography variant='h6' component={'div'} sx={{ flexGrow: 1 }}></Typography>
-
-                    <Button onClick={handleOpen} color='grey' variant="contained" endIcon={<AddCircle />}>{t('patient.addModal.button.addBtn')}</Button>
-                </Stack>
                 <Box height={10} />
                 <TableContainer sx={{ maxHeight: 440 }}>
                     <Table stickyHeader aria-label="sticky table">
@@ -212,47 +160,25 @@ const PatientList = ({
 
                         {status === 'succeeded' && (
                             <TableBody>
-                                {patients
-                                    .slice(page * patientsPage, page * patientsPage + patientsPage)
-                                    .map((patient) => (
+                                {appointments
+                                    .slice(page * appointmentsPage, page * appointmentsPage + appointmentsPage)
+                                    .map((appointment) => (
                                         <TableRow
-                                            key={patient.id}
+                                            key={appointment.id}
                                             style={{ borderRadius: '10px' }}
                                         >
-                                            <TableCell>{patient.id || '-'}</TableCell>
-                                            <TableCell>{patient.identifier?.[0]?.value || '-'}</TableCell>
+                                            <TableCell>{appointment.id || '-'}</TableCell>
+                                            <TableCell>{appointment.start || '-'}</TableCell>
+                                            <TableCell>  {`${appointment.name?.[0]?.given?.[0] || ''} ${appointment.name?.[0]?.family || ''} ${appointment.name?.[0].text || ''
+                                                    } `}</TableCell>
+                                            <TableCell>{appointment.participant?.actor}</TableCell>
+                                            <TableCell>{appointment.status}</TableCell>
 
-                                            <TableCell>
-                                                {`${patient.name?.[0]?.given?.[0] || ''} ${patient.name?.[0]?.family || ''} ${patient.name?.[0].text || ''
-                                                    } `}
-                                            </TableCell>
-
-                                            <TableCell>{patient.gender || '-'}</TableCell>
-                                            <TableCell>{patient.birthDate || '-'}</TableCell>
-                                            <TableCell>
-                                                {patient.telecom?.map((phone, index) => (
-                                                    <div key={index}>
-                                                        <div>{phone.value || '-'}</div>
-                                                        <div>{phone.use || '-'}</div>
-                                                    </div>
-                                                ))}
-                                            </TableCell>
-                                            <TableCell>
-                                                {`
-                                                    ${getCountryName(patient.address?.[0]?.country)}/
-                                                    ${getStateName(patient.address?.[0]?.state, patient.address?.[0]?.country)}`}
-                                            </TableCell>
-                                            <TableCell>{patient.extension?.[0]?.valueCode || '-'}</TableCell>
-                                            <TableCell>{'-'}</TableCell>
                                             <TableCell align='left'>
                                                 <Stack spacing={2} direction="row">
+
                                                     <IconButton
-                                                        sx={{ color: 'black', fontSize: '20px' }}
-                                                        onClick={() => handleEditClick(patient)}>
-                                                        <EditIcon />
-                                                    </IconButton>
-                                                    <IconButton
-                                                        onClick={() => handleOpenDeleteConfirmation(patient.id)}
+                                                        onClick={() => handleOpenDeleteConfirmation(appointment.id)}
                                                         sx={{ color: 'black', fontSize: '20px' }}
                                                     >
                                                         <DeleteIcon />
@@ -270,11 +196,11 @@ const PatientList = ({
                 <TablePagination
                     rowsPerPageOptions={[10, 20]}
                     component="div"
-                    count={totalPatient}
-                    rowsPerPage={patientsPage}
+                    count={totalAppointment}
+                    rowsPerPage={appointmentsPage}
                     page={page}
                     onPageChange={changePage}
-                    onRowsPerPageChange={ChangePatients}
+                    onRowsPerPageChange={ChangeAppointment}
                     nextIconButtonProps={{
                         disabled: !nextUrl,
                     }}
@@ -294,4 +220,4 @@ const PatientList = ({
         </div>
     );
 }
-export default PatientList;
+export default AppointmentList;

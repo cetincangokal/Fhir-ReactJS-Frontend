@@ -17,8 +17,7 @@ import ListItemText from '@mui/material/ListItemText';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import PersonIcon from '@mui/icons-material/Person';
 import HomeIcon from '@mui/icons-material/Home';
-import SettingsIcon from '@mui/icons-material/Settings';
-import { useNavigate } from 'react-router-dom';
+import ViewListIcon from '@mui/icons-material/ViewList';import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateOpen } from '../store/feature/AppSlice';
 import { useTranslation } from 'react-i18next';
@@ -135,7 +134,7 @@ export default function SideNavBar() {
                 <ListItemText primary={t('patient.navBar.patients')} sx={{ opacity: open ? 1 : 0 }} />
               </ListItemButton>
             </ListItem>
-            <ListItem disablePadding sx={{ display: 'block' }} onClick={() => {navigate("/settings")}}>
+            <ListItem disablePadding sx={{ display: 'block' }} onClick={() => {navigate("/appointment")}}>
               <ListItemButton
                 sx={{
                   minHeight: 48,
@@ -143,7 +142,7 @@ export default function SideNavBar() {
                   px: 2.5,
                 }}
               >
-                <SettingsIcon
+                <ViewListIcon
                   sx={{
                     minWidth: 0,
                     mr: open ? 3 : 'auto',
@@ -151,8 +150,8 @@ export default function SideNavBar() {
                   }}
                 >
                     <InboxIcon />     
-                </SettingsIcon>
-                <ListItemText primary={t('patient.navBar.settings')} sx={{ opacity: open ? 1 : 0 }} />
+                </ViewListIcon>
+                <ListItemText primary={t('patient.navBar.appointment')} sx={{ opacity: open ? 1 : 0 }} />
               </ListItemButton>
             </ListItem>
         </List>

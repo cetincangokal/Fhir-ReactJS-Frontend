@@ -18,16 +18,14 @@ export default function Form({ id, editedPatient, handleClose }) {
     const [telecoms, setTelecoms] = useState([
         { system: 'phone', value: '', use: 'work', rank: 1 },
     ]);
+    const [areaCode, setAreaCode] = useState('');
     const [czNo, setczNo] = useState('');
     var nationalities = require("i18n-nationality");
     const nationalitiesData = nationalities.getAlpha2Codes();
     const [nationality, setNationality] = useState('');
-    const countryData = Country.getAllCountries();
-    const [stateData, setStateData] = useState();
-    const [cityData, setCityData] = useState();
-    const [country, setCountry] = useState(null);
-    const [state, setState] = useState(null);
-    const [city, setCity] = useState(null);
+    const [country, setCountry] = useState('');
+    const [state, setState] = useState('');
+    const [city, setCity] = useState('');
     const [birthDateWarning, setBirthDateWarning] = useState(false);
 
 
@@ -46,53 +44,17 @@ export default function Form({ id, editedPatient, handleClose }) {
             setTelecoms(editedPatient.telecom || [
                 { system: 'phone', value: '', use: 'work', rank: 1 },
             ]);
-            setCountry(editedPatient.address?.[0]?.country || null);
-            setState(editedPatient.address?.[0]?.state || null);
-            setCity(editedPatient.address?.[0]?.city || null);
-            console.log(editedPatient);
+            setCountry(editedPatient.address?.[0]?.country || '');
+            setState(editedPatient.address?.[0]?.state || '');
+            setCity(editedPatient.address?.[0]?.city || '');
+
 
         }
     }, [editedPatient]);
-    //#region Adress and Nationality
-
-
-    useEffect(() => {
-        if (country) {
-            setStateData(State.getStatesOfCountry(country.isoCode));
-        }
-    }, [country]);
-
-    useEffect(() => {
-        setCityData(City.getCitiesOfState(country?.isoCode, state?.isoCode));
-    }, [state]);
-
-    useEffect(() => {
-        stateData && setState(stateData[0]);
-    }, [stateData]);
-
-    useEffect(() => {
-        cityData && setCity(cityData[0]);
-    }, [cityData]);
 
 
 
-    const handleCountryChange = (e) => {
-        const selectedCountry = e.target.value;
-        setCountry(selectedCountry);
-        setStateData(State.getStatesOfCountry(selectedCountry?.isoCode));
-    };
 
-    const handleStateChange = (e) => {
-        const selectedState = e.target.value;
-        setState(selectedState);
-        setCityData(City.getCitiesOfState(country?.isoCode, selectedState?.isoCode));
-    };
-
-    const handleCityChange = (e) => {
-        setCity(e.target.value);
-    };
-
-    //#endregion
 
     const handleBirthDateChange = (e) => {
         const selectedDate = e.target.value;
@@ -153,13 +115,11 @@ export default function Form({ id, editedPatient, handleClose }) {
             birthDate,
 
             telecom: newTelecoms,
-            address: [
-                {
-                    country: country?.name,
-                    state: state?.name,
-                    city: city?.name,
-                }
-            ],
+            address: [{
+                country: country,
+                city: city,
+                state: state
+            }],
         };
 
 
@@ -182,6 +142,7 @@ export default function Form({ id, editedPatient, handleClose }) {
             } else {
                 dispatch(updatePatient({ id, patientData: newPatient }));
                 handleClose();
+
 
             }
 
@@ -289,17 +250,34 @@ export default function Form({ id, editedPatient, handleClose }) {
                             <MenuItem value="old">{t('patient.list.columns.old')}</MenuItem>
                         </Select>
                     </Grid>
-
                     <Grid container spacing={2}>
 
+                    <Grid item xs={2}>
+                        <FormControl variant="outlined" size='small' style={{marginTop:'15px',marginLeft:'15px', width: '110%' }}>
+                            <InputLabel>{t('patient.list.columns.areaCode')}</InputLabel>
+                            <Select
+                                value={areaCode}
+                                label={t('patient.list.columns.areaCode')}
+                                onChange={(e) => setAreaCode(e.target.value)}
+
+                            >
+                                {Country.getAllCountries().map((countryData) => (
+                                    <MenuItem key={countryData.isoCode} value={countryData.isoCode}>
+                                        {countryData.phonecode}/{countryData.flag}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                    </Grid>
+
                         {telecoms.map((telecom, index) => (
-                            <Grid item xs={9} style={{ marginTop: '15px' }} key={index}>
+                            <Grid item xs={6} style={{ marginLeft:'25px',marginTop: '15px' }} key={index}>
                                 <div style={{ display: 'flex', alignItems: 'center' }}>
                                     <div style={{ flex: 1 }}>
                                         <TextField
                                             id={`outlined-basic-${index}`}
                                             label={t('patient.list.columns.phoneNumber')}
-                                            style={{ width: '580px', marginLeft: 15 }}
+                                            style={{ width: '415px', marginLeft: 15 }}
 
                                             variant='outlined'
                                             type="text"
@@ -341,7 +319,7 @@ export default function Form({ id, editedPatient, handleClose }) {
                             </Grid>
                         ))}
                         <Grid item xs={1}>
-                            <IconButton onClick={handleAddTelecom} style={{ marginTop: '15px', marginLeft: '135px' }}>
+                            <IconButton onClick={handleAddTelecom} style={{ marginTop: '15px', marginLeft: '180px' }}>
                                 <SendIcon style={{ color: '#1565c0' }} />
                             </IconButton>
 
@@ -387,12 +365,14 @@ export default function Form({ id, editedPatient, handleClose }) {
                             <InputLabel>{t('patient.addModal.formIndex.country')}</InputLabel>
                             <Select
                                 value={country || ''}
-                                onChange={handleCountryChange}
+                                onChange={(e) => {
+                                    setCountry(e.target.value)
+                                }}
                                 label={t('patient.addModal.formIndex.country')}
                             >
-                                {countryData.map((country) => (
-                                    <MenuItem key={country.isoCode} value={country}>
-                                        {country.name}
+                                {Country.getAllCountries().map((countryData) => (
+                                    <MenuItem key={countryData.isoCode} value={countryData.isoCode}>
+                                        {countryData.name}
                                     </MenuItem>
                                 ))}
                             </Select>
@@ -403,12 +383,14 @@ export default function Form({ id, editedPatient, handleClose }) {
                             <InputLabel>{t('patient.addModal.formIndex.state')}</InputLabel>
                             <Select
                                 value={state || ''}
-                                onChange={handleStateChange}
+                                onChange={(e) => {
+                                    setState(e.target.value)
+                                }}
                                 label={t('patient.addModal.formIndex.state')}
                             >
-                                {stateData && stateData.map((state) => (
-                                    <MenuItem key={state.isoCode} value={state}>
-                                        {state.name}
+                                {State.getStatesOfCountry(country).map((stateData) => (
+                                    <MenuItem key={stateData.isoCode} value={stateData.isoCode}>
+                                        {stateData.name}
                                     </MenuItem>
                                 ))}
                             </Select>
@@ -419,12 +401,12 @@ export default function Form({ id, editedPatient, handleClose }) {
                             <InputLabel>{t('patient.addModal.formIndex.city')}</InputLabel>
                             <Select
                                 value={city || ''}
-                                onChange={handleCityChange}
+                                onChange={(e) => setCity(e.target.value)}
                                 label={t('patient.addModal.formIndex.city')}
                             >
-                                {cityData && cityData.map((city) => (
-                                    <MenuItem key={city.name} value={city}>
-                                        {city.name}
+                                {City.getCitiesOfState(country, state).map((cityData) => (
+                                    <MenuItem key={cityData.name} value={cityData.name}>
+                                        {cityData.name}
                                     </MenuItem>
                                 ))}
                             </Select>
