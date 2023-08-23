@@ -7,7 +7,7 @@ import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import { City, Country, State } from "country-state-city";
 import { useTranslation } from 'react-i18next';
 
-export default function Form({ id, editedPatient, handleClose }) {
+const Form = ({ id, editedPatient, handleClose, genders }) => {
     const dispatch = useDispatch();
     const [t, i18n] = useTranslation('global');
     const [givenName, setGivenName] = useState('');
@@ -252,26 +252,26 @@ export default function Form({ id, editedPatient, handleClose }) {
                     </Grid>
                     <Grid container spacing={2}>
 
-                    <Grid item xs={2}>
-                        <FormControl variant="outlined" size='small' style={{marginTop:'15px',marginLeft:'15px', width: '110%' }}>
-                            <InputLabel>{t('patient.list.columns.areaCode')}</InputLabel>
-                            <Select
-                                value={areaCode}
-                                label={t('patient.list.columns.areaCode')}
-                                onChange={(e) => setAreaCode(e.target.value)}
+                        <Grid item xs={2}>
+                            <FormControl variant="outlined" size='small' style={{ marginTop: '15px', marginLeft: '15px', width: '110%' }}>
+                                <InputLabel>{t('patient.list.columns.areaCode')}</InputLabel>
+                                <Select
+                                    value={areaCode}
+                                    label={t('patient.list.columns.areaCode')}
+                                    onChange={(e) => setAreaCode(e.target.value)}
 
-                            >
-                                {Country.getAllCountries().map((countryData) => (
-                                    <MenuItem key={countryData.isoCode} value={countryData.isoCode}>
-                                        {countryData.phonecode}/{countryData.flag}
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
-                    </Grid>
+                                >
+                                    {Country.getAllCountries().map((countryData) => (
+                                        <MenuItem key={countryData.isoCode} value={countryData.isoCode}>
+                                            {countryData.phonecode}/{countryData.flag}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </Grid>
 
                         {telecoms.map((telecom, index) => (
-                            <Grid item xs={6} style={{ marginLeft:'25px',marginTop: '15px' }} key={index}>
+                            <Grid item xs={6} style={{ marginLeft: '25px', marginTop: '15px' }} key={index}>
                                 <div style={{ display: 'flex', alignItems: 'center' }}>
                                     <div style={{ flex: 1 }}>
                                         <TextField
@@ -337,10 +337,11 @@ export default function Form({ id, editedPatient, handleClose }) {
                                 style={{ width: '500px' }}
                                 onChange={(e) => setGender(e.target.value)}
                             >
-                                <MenuItem value="unknown">{t('patient.list.columns.Unknown')}</MenuItem>
-                                <MenuItem value="male">{t('patient.list.columns.male')}</MenuItem>
-                                <MenuItem value="female">{t('patient.list.columns.female')}</MenuItem>
-                                <MenuItem value="other">{t('patient.list.columns.other')}</MenuItem>
+                                {genders?.concept?.map((option) => (
+                                    <MenuItem key={option.code} value={option.code}>
+                                        {option?.designation?.filter((element) => element.language === i18n.language)[0]?.value || option?.display || ''}
+                                    </MenuItem>
+                                ))}
                             </Select>
                         </FormControl>
                     </Grid>
@@ -435,6 +436,8 @@ export default function Form({ id, editedPatient, handleClose }) {
         </>
     )
 }
+
+export default Form;
 //status ve randevu eklenecek
 //aynı kimlikten başka insan olamaz kimlik regexi koy
 //gender codeSystem

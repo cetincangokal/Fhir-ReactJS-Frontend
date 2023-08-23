@@ -13,8 +13,8 @@ import TableRow from '@mui/material/TableRow';
 import { Box, Button, Divider, IconButton, InputBase, Stack, Typography } from '@mui/material';
 import { AddCircle } from '@mui/icons-material';
 import { Search as SearchIcon, Delete as DeleteIcon, Edit as EditIcon } from '@mui/icons-material';
-import { deletePatient, fetchPatientsData, addPatient } from '../store/feature/PatientSlicer';
-import { useDispatch } from 'react-redux';
+import { deletePatient, fetchPatientsData, addPatient, fetchGenders } from '../store/feature/PatientSlicer';
+import { useDispatch, useSelector } from 'react-redux';
 import ConfirmationDialog from './ConfirmationDialogs';
 import Modal from '@mui/material/Modal';
 import Form from './Form';
@@ -41,6 +41,7 @@ const style = {
 const PatientList = ({
     patients,
     columns,
+    genders,
     page,
     patientsPage,
     status,
@@ -50,6 +51,8 @@ const PatientList = ({
     changePage,
     ChangePatients,
 }) => {
+
+
 
     const dispatch = useDispatch();
     const [t, i18n] = useTranslation('global');
@@ -114,14 +117,14 @@ const PatientList = ({
         return state ? state.name : '-';
     };
 
-    // const getGenderValueBasedOnLanguage = (gender) => {
-    //     const genderConceptObject = genders?.concept?.filter((element) => element.code === gender)[0] || undefined;
-    //     return (
-    //       genderConceptObject?.designation?.filter((element1) => element1.language === i18n.language)[0]?.value ||
-    //       genderConceptObject?.display ||
-    //       undefined
-    //     );
-    //   };
+    const getGenderValueBasedOnLanguage = (gender) => {
+        const genderConceptObject = genders?.concept?.filter((element) => element.code === gender)[0] || undefined;
+        return (
+          genderConceptObject?.designation?.filter((element1) => element1.language === i18n.language)[0]?.value ||
+          genderConceptObject?.display ||
+          undefined
+        );
+      };
 
 
     return (
@@ -138,6 +141,7 @@ const PatientList = ({
                             id={editedPatient?.id}
                             editedPatient={editedPatient}
                             handleClose={handleClose}
+                            genders={genders}
                         />
                     </Box>
                 </Modal>
@@ -173,7 +177,7 @@ const PatientList = ({
                 </Stack>
                 <Box height={10} />
                 <TableContainer sx={{ maxHeight: 440 }}>
-                    <Table stickyHeader aria-label="sticky table">
+                    <Table stickyHeader aria-label="sticky table" >
                         <TableHead>
                             <TableRow>
                                 {columns.map((column) => (
@@ -227,7 +231,7 @@ const PatientList = ({
                                                     } `}
                                             </TableCell>
 
-                                            <TableCell>{patient.gender || '-'}</TableCell>
+                                            <TableCell>{getGenderValueBasedOnLanguage(patient.gender) || '-'}</TableCell>
                                             <TableCell>{patient.birthDate || '-'}</TableCell>
                                             <TableCell>
                                                 {patient.telecom?.map((phone, index) => (

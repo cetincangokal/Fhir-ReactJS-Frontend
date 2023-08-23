@@ -60,9 +60,28 @@
       "birthdayMsg": "Doğum tarihi son 100 sene içerisinde olmalıdır!"
     },
     "appointmentForm": {
-      "title": "Randevu Formu",
-      "ApoDay": "Randevu Günü",
-      "ApoTime": "Randevu Saati"
+      "title": "Randevu Listesi",
+      "createTitle": "Randevu Ekle",
+      "appoColumns": {
+        "id": "ID",
+        "start": "Başlangıç",
+        "end": "Bitiş",
+        "duration": "Süre",
+        "patientName": "Hasta Adı",
+        "date": "Tarih",
+        "department": "Departman",
+        "patientData": "Hasta Bilgisi",
+        "expert": "Uzman",
+        "status": "Durum"
+      },
+      "button": {
+        "select": "Seç",
+        "addAppointment": "Randevu Ekle",
+        "createAppo": "Oluştur"
+
+
+      }
+
     }
   }
 }

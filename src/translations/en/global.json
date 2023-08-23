@@ -61,10 +61,26 @@
         "deleteTitle": "Confirm Delete",
         "birthdayMsg": "Birth date should be within the last 100 years!"
       },
-      "appointment": {
-        "title": "Appointment List"
-        
-
+      "appointmentForm": {
+        "title": "Appointment List",
+        "createTitle": "Create Appointment",
+        "appoColumns": {
+          "id": "ID",
+          "start": "Start",
+          "end": "End",
+          "date": "Date",
+          "department": "Department",
+          "patientData": "Patient Data",
+          "duration": "Duration",
+          "patientName": "Patient Name",
+          "expert": "Expert",
+          "status": "Status"
+        },
+        "button": {
+          "select": "Select",
+          "addAppointment": "Add Appointment",
+          "createAppo": "Create"
+        }
       }
     }
   }

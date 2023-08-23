@@ -11,7 +11,7 @@ const resourceType = 'Patient';
 const initialState = {
   patients: [],
   response: {},
-  genders: {},
+  genders: [],
   nextUrl: null,
   prevUrl: null,
   totalPatient: 0,
@@ -137,25 +137,7 @@ export const updatePatient = createAsyncThunk(
 ); 
 //#endregion
 
-export const createAppointment = createAsyncThunk(
-  'createAppointment',
-  async ({ patientId, startDateTime, endDateTime }) => {
-    const appointmentData = {
-      resourceType: 'Appointment',
-      status: 'proposed',
-      start: startDateTime.toISOString(),
-      end: endDateTime.toISOString(),
-      subject: { reference: `Patient/${patientId}` },
-    };
 
-    const response = await client.create({
-      resourceType: 'Appointment',
-      body: appointmentData,
-    });
-
-    return response;
-  }
-);
 
 const PatientSlice = createSlice({
   name: 'patients',

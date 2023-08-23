@@ -4,7 +4,7 @@ import Box from '@mui/material/Box';
 import Navbar from '../components/Navbar';
 import AppointmentList from '../components/AppointmentList';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchAppointmentData, setPage, setAppointmentsPage } from '../store/feature/AppointmentSlice';
+import { fetchAppointmentData, setPage, setAppointmentsPage, fetchStatus } from '../store/feature/AppointmentSlice';
 
 
 
@@ -15,7 +15,13 @@ const Appointment = () => {
         dispatch(fetchAppointmentData(''));
     }, [dispatch]);
 
+    const { statusAppo } = useSelector((state) => state.appointments);
 
+    React.useEffect(() => {
+        if (statusAppo.length <= 0) {
+            dispatch(fetchStatus());
+          }
+    }, [statusAppo]);
 
 
     //#region Sayfada gösterilecek data
@@ -48,7 +54,9 @@ const Appointment = () => {
 
     const columns = [
         { id: 'id', label: 'ID', minWidth: 100 },
-        { id: 'date', label: 'Date', minWidth: 100 },
+        { id: 'start', label: 'Start', minWidth: 100 },
+        { id: 'end', label: 'End', minWidth: 100 },
+        { id: 'duration', label: 'Duration', minWidth: 100 },
         { id: 'patientName', label: 'Patient Name', minWidth: 150 },
         { id: 'expert', label: 'Expert', minWidth: 100 },
         { id: 'status', label: 'Status', minWidth: 100 },
@@ -63,6 +71,7 @@ const Appointment = () => {
                     <AppointmentList
                         appointments={appointments}
                         columns={columns}
+                        statusAppo={statusAppo}
                         totalAppointment={totalAppointment}
                         page={page}
                         appointmentsPage={appointmentsPage}

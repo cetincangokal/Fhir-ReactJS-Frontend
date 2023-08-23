@@ -1,15 +1,14 @@
-import React, { useEffect } from 'react'
-import SideNavBar from '../components/SideNavbar'
-import Box from '@mui/material/Box';
-import Navbar from '../components/Navbar';
-import PatientList from '../components/Table';
+import { Grid, IconButton, Typography, Box, TextField, Button, InputLabel, Select, MenuItem, FormControl, Divider } from '@mui/material';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchPatientsData, setPage, setPatientsPage, fetchGenders } from '../store/feature/PatientSlicer';
+import { fetchGenders, fetchPatientsData, setPage, setPatientsPage, updatePatient } from '../store/feature/PatientSlicer';
 
+import { useTranslation } from 'react-i18next';
+import PatientListAppo from './PatientListAppointment';
 
-
-const Patient = () => {
+const AppointmentForm = ({handleClose}) => {
     const dispatch = useDispatch();
+    const [t, i18n] = useTranslation('global');
     const { patients, response, nextUrl, prevUrl, totalPatient, page, patientsPage, status, error } = useSelector(state => state.patients);
     useEffect(() => {
         dispatch(fetchPatientsData(''));
@@ -22,8 +21,6 @@ const Patient = () => {
         dispatch(fetchGenders());
       }
     }, [genders]);
-
-
 
     //#region Sayfada gösterilecek data
     const changePage = (event, newPage) => {
@@ -64,34 +61,35 @@ const Patient = () => {
         { id: 'nationality', label: 'Nationality', minWidth: 100 },
         { id: 'status', label: 'Status', minWidth: 100 },
     ];
+
+
+
+
+
+
     return (
         <>
-            <Navbar />
-            <Box height={70} />
-            <Box sx={{ display: 'flex' }}>
-                <SideNavBar />
-                <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-                    <PatientList
-                        patients={patients}
-                        columns={columns}
-                        totalPatient={totalPatient}
-                        page={page}
-                        genders={genders}
-                        patientsPage={patientsPage}
-                        status={status}
-                        error={error}
-                        nextUrl={nextUrl}
-                        prevUrl={prevUrl}
-                        changePage={changePage}
-                        ChangePatients={ChangePatients}
+            <Box sx={{ flexGrow: 1 }} />
 
-                    />
-                </Box>
-            </Box>
+            <PatientListAppo
+                handleClose={handleClose}
+                patients={patients}
+                columns={columns}
+                totalPatient={totalPatient}
+                page={page}
+                genders={genders}
+                patientsPage={patientsPage}
+                status={status}
+                error={error}
+                nextUrl={nextUrl}
+                prevUrl={prevUrl}
+                changePage={changePage}
+                ChangePatients={ChangePatients}
+            />
 
-
+            <Box sx={{ m: 4 }} />
         </>
     )
 }
 
-export default Patient;
+export default AppointmentForm;
